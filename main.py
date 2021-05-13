@@ -41,15 +41,18 @@ def main():
 
             photosDb.write(f"{photo.id},{photo.filename},{base64Id}{ext}\n")
 
-            with open(metaFilename, "x", encoding="utf-8") as metaFile:
-                metaFile.write("id: ")
-                metaFile.write(photo.id)
-                metaFile.write("\noriginal_filename: ")
-                metaFile.write(photo.filename)
+            try:
+                with open(metaFilename, "x", encoding="utf-8") as metaFile:
+                    metaFile.write("id: ")
+                    metaFile.write(photo.id)
+                    metaFile.write("\noriginal_filename: ")
+                    metaFile.write(photo.filename)
 
-            with photo.download() as download:
-                with open(filename, "wb") as file:
-                    shutil.copyfileobj(download.raw, file)
+                with photo.download() as download:
+                    with open(filename, "wb") as file:
+                        shutil.copyfileobj(download.raw, file)
+            except:
+                print(f"Could not download {filename}, skipping!")
 
 
 def backupAlbumMetadata(album, api, filename):
