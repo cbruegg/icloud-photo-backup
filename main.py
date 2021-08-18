@@ -51,8 +51,9 @@ def main():
                 with photo.download() as download:
                     with open(filename, "wb") as file:
                         shutil.copyfileobj(download.raw, file)
-            except:
+            except Exception as e:
                 print(f"Could not download {filename}, skipping!")
+                print(e)
 
 
 def backupAlbumMetadata(album, api, filename):
