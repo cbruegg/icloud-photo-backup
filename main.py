@@ -47,6 +47,10 @@ def main():
                     metaFile.write(photo.id)
                     metaFile.write("\noriginal_filename: ")
                     metaFile.write(photo.filename)
+                    metaFile.write("\nadded_date: ")
+                    metaFile.write(str(photo.added_date))
+                    metaFile.write("\ncreated: ")
+                    metaFile.write(str(photo.created))
 
                 with photo.download() as download:
                     with open(filename, "wb") as file:
