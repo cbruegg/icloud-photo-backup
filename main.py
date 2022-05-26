@@ -41,27 +41,30 @@ def main():
 
             photosDb.write(f"{photo.id},{photo.filename},{base64Id}{ext}\n")
 
-            try:
-                with open(metaFilename, "x", encoding="utf-8") as metaFile:
-                    metaFile.write("id: ")
-                    metaFile.write(photo.id)
-                    metaFile.write("\noriginal_filename: ")
-                    metaFile.write(photo.filename)
-                    metaFile.write("\nadded_date: ")
-                    metaFile.write(str(photo.added_date))
-                    metaFile.write("\ncreated: ")
-                    metaFile.write(str(photo.created))
+            if os.path.exists(filename) and os.path.getsize(filename) == photo.size:
+                print(f"Skipping download of photo {photoIdx + 1} as it is already downloaded.")
+            else:
+                try:
+                    with open(metaFilename, "w", encoding="utf-8") as metaFile:
+                        metaFile.write("id: ")
+                        metaFile.write(photo.id)
+                        metaFile.write("\noriginal_filename: ")
+                        metaFile.write(photo.filename)
+                        metaFile.write("\nadded_date: ")
+                        metaFile.write(str(photo.added_date))
+                        metaFile.write("\ncreated: ")
+                        metaFile.write(str(photo.created))
 
-                with photo.download() as download:
-                    with open(filename, "wb") as file:
-                        shutil.copyfileobj(download.raw, file)
-            except Exception as e:
-                print(f"Could not download {filename}, skipping!")
-                print(e)
+                    with photo.download() as download:
+                        with open(filename, "wb") as file:
+                            shutil.copyfileobj(download.raw, file)
+                except Exception as e:
+                    print(f"Could not download {filename}, skipping!")
+                    print(e)
 
 
 def backupAlbumMetadata(album, api, filename):
-    with open(filename, "x", encoding="utf8") as file:
+    with open(filename, "w", encoding="utf8") as file:
         file.write(album)
         file.write("\n\n")
 
